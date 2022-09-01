@@ -1,13 +1,21 @@
 import { exportOrders, addNewOrder } from "./database.js";
 
 document.addEventListener("stateChanged", event => {
+    renderHTML()
     displayOrders()
+})
+
+document.addEventListener('notSelected', event => {
+    renderHTML()
+    console.log("Does this work????")
+    errorText()
 })
 
 const renderHTML = () => {
     let html = ''
     const appElement = document.querySelector('#main-container')
     html += `<h1>Sub Shoppe</h1>
+    <div class="error"></div>
     <div>
       <h3>Sandwich Construction</h3>
       <div class="subForm">
@@ -43,6 +51,11 @@ const renderHTML = () => {
             <input id="provolone" name="cheese" type="radio" value="Provolone Cheese" />
             <label for="swiss">Swiss Cheese</label>
             <input id="swiss" name="cheese" type="radio" value="Swiss Cheese" />
+        </div>
+        <div class="toast">
+          <p>Toasted?</p>
+            <label for="toasted">Yes</label>
+            <input id="toasted" name="toasted" type="checkbox" value="Toasted" />
         </div>
         <div class="toppings">
             <p>Pick your Toppings (Select all that apply)</p>
@@ -85,6 +98,13 @@ const renderHTML = () => {
 
 renderHTML()
 
+const errorText = () => {
+    let html = ``
+    const htmlElement = document.querySelector('.error')
+    html += `<h2 class="errorDialog"> You missed something....</h2>`
+    return htmlElement.innerHTML = html
+}
+
 const displayOrders = () => {
     const orders = exportOrders()
     let completedOrders = ''
@@ -92,12 +112,28 @@ const displayOrders = () => {
     for(const order of orders) {
         if(order.orderStatus) {
             order.orderStatus = "COMPLETED"
+            if(order.toasted) {
+                order.toasted = "Yes"
             completedOrders += `<ul>`
             completedOrders += `<li>Order#: ${order.id}</li>`
             completedOrders += `<li>Order For: ${order.name}</li>`
             completedOrders += `<li>Bread: ${order.bread}</li>`
             completedOrders += `<li>Protein: ${order.protein}</li>`
             completedOrders += `<li>Cheese: ${order.cheese}</li>`
+            completedOrders += `<li>Toasted?: ${order.toasted}</li>`
+            completedOrders += `<li>Toppings: ${order.toppings}</li>`
+            completedOrders += `<li>Order Status: ${order.orderStatus}</li>`
+            completedOrders += `</ul>`
+            }
+        } if (order.toasted === false) {
+            order.toasted = "No"
+            completedOrders += `<ul>`
+            completedOrders += `<li>Order#: ${order.id}</li>`
+            completedOrders += `<li>Order For: ${order.name}</li>`
+            completedOrders += `<li>Bread: ${order.bread}</li>`
+            completedOrders += `<li>Protein: ${order.protein}</li>`
+            completedOrders += `<li>Cheese: ${order.cheese}</li>`
+            completedOrders += `<li>Toasted?: ${order.toasted}</li>`
             completedOrders += `<li>Toppings: ${order.toppings}</li>`
             completedOrders += `<li>Order Status: ${order.orderStatus}</li>`
             completedOrders += `</ul>`
@@ -109,25 +145,50 @@ const displayOrders = () => {
   
   displayOrders()
 
-  document.addEventListener('click', (event) => {
-    if (event.target.id === "submitOrder") {
-      const toppingsArray = []
-      const bread = document.querySelector("input[name=bread]:checked")?.value
-      const name = document.querySelector("input[name=name")?.value
-      const cheese = document.querySelector("input[name=cheese]:checked")?.value
-      const protein = document.querySelector("input[name=protein]:checked")?.value
-      const toppingsElements = document.querySelectorAll("input[name=toppings]:checked")
-      const toppings = toppingsElements.forEach(toppingsElement => {
-        toppingsArray.push(toppingsElement.value)
-      })
-      const orders = {
-        bread: bread,
-        cheese: cheese,
-        protein: protein,
-        toppings: toppingsArray,
-        name: name,
-        orderStatus: true
-      }
-      addNewOrder(orders)
+
+// feels and looks clunky
+  document.addEventListener('click', (event) => { 
+    if (event.target.id === "submitOrder") { 
+       if(document.querySelector("#toasted:checked")) {
+            const toppingsArray = []
+            const bread = document.querySelector("input[name=bread]:checked")?.value
+            const name = document.querySelector("input[name=name]")?.value
+            const cheese = document.querySelector("input[name=cheese]:checked")?.value
+            const protein = document.querySelector("input[name=protein]:checked")?.value
+            const toasted = true
+            const toppingsElements = document.querySelectorAll("input[name=toppings]:checked")
+            const toppings = toppingsElements.forEach(toppingsElement => {
+              toppingsArray.push(toppingsElement.value)})
+            const orders = {
+                bread: bread,
+                cheese: cheese,
+                protein: protein,
+                toasted: toasted,
+                toppings: toppingsArray,
+                name: name,
+                orderStatus: true
+                }
+            addNewOrder(orders)
+        } else if(document.querySelector("#toasted")) {
+            const toppingsArray = []
+            const bread = document.querySelector("input[name=bread]:checked")?.value
+            const name = document.querySelector("input[name=name")?.value
+            const cheese = document.querySelector("input[name=cheese]:checked")?.value
+            const protein = document.querySelector("input[name=protein]:checked")?.value
+            const toasted = false
+            const toppingsElements = document.querySelectorAll("input[name=toppings]:checked")
+            const toppings = toppingsElements.forEach(toppingsElement => {
+              toppingsArray.push(toppingsElement.value)})
+            const orders = {
+                bread: bread,
+                cheese: cheese,
+                protein: protein,
+                toppings: toppingsArray,
+                toasted: toasted,
+                name: name,
+                orderStatus: true
+                }
+            addNewOrder(orders)
+        } else if()
     }
 })

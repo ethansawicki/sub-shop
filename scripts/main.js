@@ -6,8 +6,6 @@ document.addEventListener("stateChanged", event => {
 })
 
 document.addEventListener('notSelected', event => {
-    renderHTML()
-    console.log("Does this work????")
     errorText()
 })
 
@@ -96,14 +94,14 @@ const renderHTML = () => {
     return appElement.innerHTML = html
 }
 
-renderHTML()
-
 const errorText = () => {
     let html = ``
     const htmlElement = document.querySelector('.error')
     html += `<h2 class="errorDialog"> You missed something....</h2>`
     return htmlElement.innerHTML = html
 }
+
+renderHTML()
 
 const displayOrders = () => {
     const orders = exportOrders()
@@ -149,7 +147,10 @@ const displayOrders = () => {
 // feels and looks clunky
   document.addEventListener('click', (event) => { 
     if (event.target.id === "submitOrder") { 
-       if(document.querySelector("#toasted:checked")) {
+        if (document.querySelector('input[name=name]')?.value === "") {
+            document.dispatchEvent(new CustomEvent("notSelected"))
+        }
+       else if(document.querySelector("#toasted:checked")) {
             const toppingsArray = []
             const bread = document.querySelector("input[name=bread]:checked")?.value
             const name = document.querySelector("input[name=name]")?.value
@@ -189,6 +190,6 @@ const displayOrders = () => {
                 orderStatus: true
                 }
             addNewOrder(orders)
-        } else if()
+        } 
     }
 })

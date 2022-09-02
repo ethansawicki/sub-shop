@@ -6,6 +6,7 @@ document.addEventListener("stateChanged", event => {
 })
 
 document.addEventListener('notSelected', event => {
+    window.scrollTo(0,0)
     errorText()
 })
 

@@ -143,40 +143,12 @@ const displayOrders = () => {
   
   displayOrders()
 
-
-// feels and looks clunky
-  document.addEventListener('click', (event) => { 
-    if (event.target.id === "submitOrder") { 
-        if (document.querySelector('input[name=name]')?.value === "") {
-            document.dispatchEvent(new CustomEvent("notSelected"))
-        }
-       else if(document.querySelector("#toasted:checked")) {
-            const toppingsArray = []
-            const bread = document.querySelector("input[name=bread]:checked")?.value
-            const name = document.querySelector("input[name=name]")?.value
-            const cheese = document.querySelector("input[name=cheese]:checked")?.value
-            const protein = document.querySelector("input[name=protein]:checked")?.value
-            const toasted = true
-            const toppingsElements = document.querySelectorAll("input[name=toppings]:checked")
-            const toppings = toppingsElements.forEach(toppingsElement => {
-              toppingsArray.push(toppingsElement.value)})
-            const orders = {
-                bread: bread,
-                cheese: cheese,
-                protein: protein,
-                toasted: toasted,
-                toppings: toppingsArray,
-                name: name,
-                orderStatus: true
-                }
-            addNewOrder(orders)
-        } else if(document.querySelector("#toasted")) {
-            const toppingsArray = []
+  document.addEventListener('click', (event) => {
+    const toppingsArray = []
             const bread = document.querySelector("input[name=bread]:checked")?.value
             const name = document.querySelector("input[name=name")?.value
             const cheese = document.querySelector("input[name=cheese]:checked")?.value
             const protein = document.querySelector("input[name=protein]:checked")?.value
-            const toasted = false
             const toppingsElements = document.querySelectorAll("input[name=toppings]:checked")
             const toppings = toppingsElements.forEach(toppingsElement => {
               toppingsArray.push(toppingsElement.value)})
@@ -185,11 +157,18 @@ const displayOrders = () => {
                 cheese: cheese,
                 protein: protein,
                 toppings: toppingsArray,
-                toasted: toasted,
+                toasted: false,
                 name: name,
                 orderStatus: true
-                }
+                } 
+    if (event.target.id === "submitOrder") {
+        if (document.querySelector('input[name=name]')?.value === "") {
+            document.dispatchEvent(new CustomEvent("notSelected"))
+        } else if(document.querySelector("input[name=toasted]:checked")) {
+            orders.toasted = true
             addNewOrder(orders)
+        } else {
+             addNewOrder(orders)
         } 
     }
 })

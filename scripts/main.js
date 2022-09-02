@@ -12,9 +12,9 @@ document.addEventListener('notSelected', event => {
 const renderHTML = () => {
     let html = ''
     const appElement = document.querySelector('#main-container')
-    html += `<h1>Sub Shoppe</h1>
-    <div class="error"></div>
+    html += `<div class="error"></div>
     <div>
+    <h1>Sub Shoppe</h1>
       <h3>Sandwich Construction</h3>
       <div class="subForm">
         <div class="extras">
